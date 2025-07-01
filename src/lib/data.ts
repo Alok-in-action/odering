@@ -1,6 +1,18 @@
+
 import type { MenuItem, Category, Order, CartItem } from './types';
 
-let categories: Category[] = [
+// In-memory "database"
+declare global {
+  // allow global `var` declarations
+  // eslint-disable-next-line no-var
+  var db: {
+    categories: Category[];
+    menuItems: MenuItem[];
+    orders: Order[];
+  } | undefined
+}
+
+const initialCategories: Category[] = [
   { id: 'khane-se-pahele-time-pass', name: 'Khane Se Pahele Time Pass' },
   { id: 'chinese-hot-soup', name: 'Chinese Hot Soup' },
   { id: 'milk-shakes-cold-coffee', name: 'Milk Shakes & Cold Coffee' },
@@ -32,7 +44,7 @@ let categories: Category[] = [
   { id: 'monto-special-thali', name: 'Monto Special Thali' },
 ];
 
-let menuItems: MenuItem[] = [
+const initialMenuItems: MenuItem[] = [
   // Khane Se Pahele Time Pass
   { id: '1', name: 'Cheese Masala Papad', description: 'चीज मसाला पापड़', price: 45.00, categoryId: 'khane-se-pahele-time-pass' },
   { id: '2', name: 'Roasted Papad', description: 'भुना हुआ पापड़', price: 20.00, categoryId: 'khane-se-pahele-time-pass' },
@@ -381,44 +393,53 @@ let menuItems: MenuItem[] = [
   { id: '291', name: 'Mix Uttapam', description: 'मिक्स उत्तपम', price: 160.00, categoryId: 'uttapam' },
   
   // Monto Special Thali
-  { id: '292', name: 'Monto Special Thali (Rs.201/-)', description: 'मोन्टो स्पेशल थाली (Rs.२०१/-). In Fixed Quantity: Roasted Papad, Salad, Paneer Sabji, Vegetable Dal Tadka, Rice, 4 Chapati, Sweet: Rasgulla (1 piece).', price: 201.00, categoryId: 'monto-special-thali' },
+  { id: '292', name: 'Monto Special Thali (₹201/-)', description: 'मोन्टो स्पेशल थाली (₹२०१/-). In Fixed Quantity: Roasted Papad, Salad, Paneer Sabji, Vegetable Dal Tadka, Rice, 4 Chapati, Sweet: Rasgulla (1 piece).', price: 201.00, categoryId: 'monto-special-thali' },
 ];
 
-let orders: Order[] = [];
+const db = global.db || {
+  categories: initialCategories,
+  menuItems: initialMenuItems,
+  orders: []
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  global.db = db
+}
+
 
 // Menu Data Functions
 export const getMenuData = async () => {
-  return { categories, menuItems };
+  return { categories: db.categories, menuItems: db.menuItems };
 };
 
 export const getMenuItems = async () => {
-  return menuItems;
+  return db.menuItems;
 }
 
 export const getCategories = async () => {
-  return categories;
+  return db.categories;
 }
 
 export const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
   const newItem = { ...item, id: Date.now().toString() };
-  menuItems.push(newItem);
+  db.menuItems.push(newItem);
   return newItem;
 };
 
 export const updateMenuItem = async (updatedItem: MenuItem) => {
-  menuItems = menuItems.map(item => item.id === updatedItem.id ? updatedItem : item);
+  db.menuItems = db.menuItems.map(item => item.id === updatedItem.id ? updatedItem : item);
   return updatedItem;
 };
 
 export const deleteMenuItem = async (id: string) => {
-  menuItems = menuItems.filter(item => item.id !== id);
+  db.menuItems = db.menuItems.filter(item => item.id !== id);
   return { success: true };
 };
 
 
 // Order Data Functions
 export const getOrders = async () => {
-  return orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  return db.orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 };
 
 export const addOrder = async (tableNumber: number, items: CartItem[], total: number) => {
@@ -430,12 +451,12 @@ export const addOrder = async (tableNumber: number, items: CartItem[], total: nu
     status: 'pending',
     createdAt: new Date(),
   };
-  orders.push(newOrder);
+  db.orders.push(newOrder);
   return newOrder;
 };
 
 export const updateOrderStatus = async (id: string, status: 'pending' | 'completed') => {
-  const order = orders.find(o => o.id === id);
+  const order = db.orders.find(o => o.id === id);
   if (order) {
     order.status = status;
     return order;
