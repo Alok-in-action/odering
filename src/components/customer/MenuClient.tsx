@@ -4,7 +4,28 @@ import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
 import type { Category, MenuItem } from '@/lib/types';
-import { PlusCircle, UtensilsCrossed, Salad, CakeSlice, CupSoda } from 'lucide-react';
+import { 
+  PlusCircle, 
+  UtensilsCrossed, 
+  Salad, 
+  Soup, 
+  CupSoda, 
+  Flame, 
+  GlassWater, 
+  Sandwich, 
+  FlameKindling, 
+  Utensils, 
+  CookingPot, 
+  Vegan, 
+  Nut, 
+  Circle, 
+  Sprout, 
+  Wheat, 
+  RectangleHorizontal, 
+  Bowl, 
+  Pizza, 
+  Burger 
+} from 'lucide-react';
 
 interface MenuClientProps {
   categories: Category[];
@@ -12,10 +33,35 @@ interface MenuClientProps {
 }
 
 const categoryIcons: { [key: string]: React.ElementType } = {
-  appetizers: Salad,
-  'main-courses': UtensilsCrossed,
-  desserts: CakeSlice,
-  drinks: CupSoda,
+  'khane-se-pahele-time-pass': Salad,
+  'chinese-hot-soup': Soup,
+  'milk-shakes-cold-coffee': CupSoda,
+  'hot-time': Flame,
+  'raita-lassi': GlassWater,
+  'starters-pakoda': Sandwich,
+  'chinese-sizzler': FlameKindling,
+  'chinese-main-course': UtensilsCrossed,
+  'chinese-starters': Utensils,
+  'tandoor-starters': CookingPot,
+  'paneer-ka-kamal': Vegan,
+  'kaju-ka-khazana': Nut,
+  'kofta': Circle,
+  'punjab-ka-dhamaka': Sprout,
+  'mitti-ki-khushbu-roti': Wheat,
+  'tava-roti': CookingPot,
+  'south-indian-fancy-dosa': RectangleHorizontal,
+  'kuch-ke-kuch-saath': Soup,
+  'basmati-ka-swad-rice': Bowl,
+  'mozzarella-pizza': Pizza,
+  'toast-sandwich': Sandwich,
+  'pav-bhaji': Soup,
+  'pizza': Pizza,
+  'grill-sandwich': Sandwich,
+  'burger': Burger,
+  'sip-in-soda': CupSoda,
+  'paper-dosa': RectangleHorizontal,
+  'uttapam': Circle,
+  'monto-special-thali': Utensils,
 };
 
 export function MenuClient({ categories, menuItems }: MenuClientProps) {
