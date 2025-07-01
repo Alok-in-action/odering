@@ -63,7 +63,7 @@ export function MenuClient({ menuItems, categories }: MenuClientProps) {
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>{categories.find(c => c.id === item.categoryId)?.name}</TableCell>
-                  <TableCell>Rs. {item.price.toFixed(2)}</TableCell>
+                  <TableCell>₹{item.price.toFixed(2)}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button variant="outline" size="icon" onClick={() => handleOpenDialog(item)}>

@@ -39,7 +39,7 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
         description: (
           <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4 text-white">
             <p className="text-sm">Table: {result.order.tableNumber}</p>
-            <p className="text-sm">Total: Rs. {result.order.total.toFixed(2)}</p>
+            <p className="text-sm">Total: ₹{result.order.total.toFixed(2)}</p>
             <p className="text-sm">Order ID: {result.order.id}</p>
           </div>
         )
@@ -71,7 +71,7 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
                   <div key={item.id} className="flex items-center gap-4">
                     <div className="flex-grow">
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-muted-foreground">Rs. {item.price.toFixed(2)}</p>
+                      <p className="text-sm text-muted-foreground">₹{item.price.toFixed(2)}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                           <Minus className="h-4 w-4" />
@@ -83,7 +83,7 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                        <p className="font-semibold">Rs. {(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => removeFromCart(item.id)}>
                             <Trash2 className="h-4 w-4" />
                         </Button>
@@ -96,7 +96,7 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
               <div className="w-full space-y-4">
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total</span>
-                  <span>Rs. {cartTotal.toFixed(2)}</span>
+                  <span>₹{cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="space-y-2">
                     <div className="flex justify-between items-center rounded-md border p-3">

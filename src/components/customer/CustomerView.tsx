@@ -5,6 +5,7 @@ import { MenuClient } from '@/components/customer/MenuClient';
 import { TableNumberModal } from '@/components/customer/TableNumberModal';
 import type { Category, MenuItem } from '@/lib/types';
 import { useEffect, useState } from 'react';
+import { Header } from './Header';
 
 interface CustomerViewProps {
   categories: Category[];
@@ -20,19 +21,21 @@ export function CustomerView({ categories, menuItems }: CustomerViewProps) {
   }, []);
 
   if (!isClient) {
-    return null;
+    return <div className="min-h-screen w-full bg-background" />;
   }
 
   return (
-    <>
+    <div className="min-h-screen w-full bg-background">
       <TableNumberModal />
+      <Header />
       {tableNumber !== null ? (
         <MenuClient categories={categories} menuItems={menuItems} />
       ) : (
-        <div className="container py-8 text-center">
-            <p className="text-muted-foreground">Please enter a table number to view the menu.</p>
+        <div className="container grid place-content-center gap-4 py-20 text-center">
+            <h2 className="text-2xl font-bold tracking-tight">Welcome to MONTO Restaurant!</h2>
+            <p className="text-muted-foreground">Please enter your table number to view the menu and start your order.</p>
         </div>
       )}
-    </>
+    </div>
   );
 }

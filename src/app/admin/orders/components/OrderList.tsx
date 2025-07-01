@@ -30,13 +30,13 @@ export function OrderList({ orders }: { orders: Order[] }) {
                 <CardDescription>View and manage incoming customer orders.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {orders.length === 0 && <p className="text-muted-foreground col-span-full text-center">No orders yet.</p>}
+                {orders.length === 0 && <p className="text-muted-foreground col-span-full text-center py-10">No orders yet.</p>}
                 {orders.map(order => (
                 <Card key={order.id} className={order.status === 'completed' ? 'bg-muted/50' : ''}>
                     <CardHeader>
                         <CardTitle className="flex justify-between items-center">
                             <span>Table {order.tableNumber}</span>
-                             <Badge variant={order.status === 'pending' ? 'default' : 'secondary'} className={order.status === 'pending' ? 'bg-accent text-accent-foreground' : ''}>
+                             <Badge variant={order.status === 'pending' ? 'default' : 'secondary'} className={order.status === 'pending' ? 'bg-primary text-primary-foreground' : ''}>
                                 {order.status}
                             </Badge>
                         </CardTitle>
@@ -49,13 +49,13 @@ export function OrderList({ orders }: { orders: Order[] }) {
                         {order.items.map(item => (
                             <li key={item.id} className="flex justify-between text-sm">
                                 <span>{item.quantity} x {item.name}</span>
-                                <span>Rs. {(item.quantity * item.price).toFixed(2)}</span>
+                                <span>₹{(item.quantity * item.price).toFixed(2)}</span>
                             </li>
                         ))}
                         </ul>
                         <div className="border-t mt-2 pt-2 flex justify-between font-bold">
                             <span>Total</span>
-                            <span>Rs. {order.total.toFixed(2)}</span>
+                            <span>₹{order.total.toFixed(2)}</span>
                         </div>
                     </CardContent>
                     <CardFooter>

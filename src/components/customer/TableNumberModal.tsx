@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -34,7 +34,7 @@ export function TableNumberModal() {
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Welcome to MenuMate</DialogTitle>
+          <DialogTitle>Welcome to MONTO Restaurant</DialogTitle>
           <DialogDescription>
             Please enter your table number to start your order.
           </DialogDescription>
@@ -45,9 +45,9 @@ export function TableNumberModal() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-            placeholder="Table Number"
+            placeholder="E.g. 12"
             type="number"
-            className="text-center text-lg"
+            className="text-center text-lg h-12 rounded-lg"
             autoFocus
           />
         </div>
