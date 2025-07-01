@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Edit } from 'lucide-react';
 import { CartSheet } from './CartSheet';
 import { useState } from 'react';
 
 export function Header() {
-  const { totalItems } = useCart();
+  const { totalItems, tableNumber, setTableNumber } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
@@ -21,6 +21,16 @@ export function Header() {
             <Link href="/admin" legacyBehavior passHref>
                 <Button variant="ghost">Admin Panel</Button>
             </Link>
+             {tableNumber && (
+              <div className="flex items-center gap-2 border-l pl-4">
+                <span className="text-sm text-muted-foreground">Table</span>
+                <span className="font-semibold">{tableNumber}</span>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setTableNumber(null)}>
+                  <Edit className="h-4 w-4" />
+                  <span className="sr-only">Change Table</span>
+                </Button>
+              </div>
+            )}
             <Button onClick={() => setIsCartOpen(true)} variant="outline" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (

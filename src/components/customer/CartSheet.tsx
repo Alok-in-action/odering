@@ -2,7 +2,6 @@
 
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetDescription } from '@/components/ui/sheet';
 import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
@@ -16,23 +15,22 @@ interface CartSheetProps {
 }
 
 export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, clearCart, cartTotal, tableNumber, setTableNumber } = useCart();
   const { toast } = useToast();
-  const [tableNumber, setTableNumber] = useState('');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const handlePlaceOrder = async () => {
-    if (!tableNumber || isNaN(parseInt(tableNumber)) || parseInt(tableNumber) <= 0) {
+    if (!tableNumber) {
       toast({
         variant: "destructive",
         title: "Invalid Table Number",
-        description: "Please enter a valid table number.",
+        description: "Please set a valid table number.",
       });
       return;
     }
     
     setIsPlacingOrder(true);
-    const result = await placeOrderAction(parseInt(tableNumber), cartItems, cartTotal);
+    const result = await placeOrderAction(tableNumber, cartItems, cartTotal);
     setIsPlacingOrder(false);
 
     if (result.success && result.order) {
@@ -47,7 +45,6 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
         )
       });
       clearCart();
-      setTableNumber('');
       onOpenChange(false);
     } else {
        toast({
@@ -102,19 +99,18 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
                   <span>${cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="space-y-2">
-                    <Input 
-                        type="number" 
-                        placeholder="Enter your table number" 
-                        value={tableNumber}
-                        onChange={(e) => setTableNumber(e.target.value)}
-                        className="text-center"
-                    />
+                    <div className="flex justify-between items-center rounded-md border p-3">
+                        <span className="text-sm">Table Number: <span className="font-semibold">{tableNumber}</span></span>
+                        <Button variant="link" className="p-0 h-auto" onClick={() => { onOpenChange(false); setTableNumber(null); }}>
+                            Change
+                        </Button>
+                    </div>
                     <Button 
                       className="w-full"
                       onClick={handlePlaceOrder}
-                      disabled={isPlacingOrder}
+                      disabled={isPlacingOrder || !tableNumber}
                     >
-                      {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
+                      {isPlacingOrder ? 'Placing Order...' : `Place Order for Table ${tableNumber}`}
                     </Button>
                 </div>
               </div>

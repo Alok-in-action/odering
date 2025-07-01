@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 import type { CartItem, MenuItem } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast"
 
@@ -13,13 +13,40 @@ interface CartContextType {
   clearCart: () => void;
   cartTotal: number;
   totalItems: number;
+  tableNumber: number | null;
+  setTableNumber: (table: number | null) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [tableNumber, setTableNumberState] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    try {
+      const storedTable = localStorage.getItem('tableNumber');
+      if (storedTable && !isNaN(parseInt(storedTable))) {
+        setTableNumberState(parseInt(storedTable));
+      }
+    } catch (error) {
+      console.error("Could not read table number from localStorage", error);
+    }
+  }, []);
+
+  const setTableNumber = useCallback((table: number | null) => {
+    try {
+      if (table) {
+        localStorage.setItem('tableNumber', table.toString());
+      } else {
+        localStorage.removeItem('tableNumber');
+      }
+    } catch (error) {
+       console.error("Could not write table number to localStorage", error);
+    }
+    setTableNumberState(table);
+  }, []);
 
   const addToCart = useCallback((item: MenuItem) => {
     setCartItems(prevItems => {
@@ -71,7 +98,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     clearCart,
     cartTotal,
     totalItems,
-  }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, totalItems]);
+    tableNumber,
+    setTableNumber,
+  }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, totalItems, tableNumber, setTableNumber]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

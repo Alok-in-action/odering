@@ -1,6 +1,6 @@
 import { getMenuData } from '@/lib/data';
 import { Header } from '@/components/customer/Header';
-import { MenuClient } from '@/components/customer/MenuClient';
+import { CustomerView } from '@/components/customer/CustomerView';
 
 export default async function HomePage() {
   const { categories, menuItems } = await getMenuData();
@@ -9,7 +9,7 @@ export default async function HomePage() {
     <div className="min-h-screen w-full">
       <Header />
       <main>
-        <MenuClient categories={categories} menuItems={menuItems} />
+        <CustomerView categories={categories} menuItems={menuItems} />
       </main>
       <footer className="py-6 text-center text-sm text-muted-foreground">
         © {new Date().getFullYear()} MenuMate. All rights reserved.
