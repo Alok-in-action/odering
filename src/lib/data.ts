@@ -442,6 +442,12 @@ export const getOrders = async () => {
   return db.orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 };
 
+export const getOrdersByTable = async (tableNumber: number) => {
+  return db.orders
+    .filter(o => o.tableNumber === tableNumber)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+};
+
 export const addOrder = async (tableNumber: number, items: CartItem[], total: number) => {
   const newOrder: Order = {
     id: `ord-${Date.now()}`,

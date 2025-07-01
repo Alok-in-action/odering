@@ -28,10 +28,11 @@ export function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const pathname = usePathname();
 
+  const myOrdersLink = tableNumber ? { href: `/my-orders?table=${tableNumber}`, label: 'My Orders', icon: ListOrdered } : null;
+
   const navLinks = [
     { href: '/', label: 'Menu' },
-    { href: '/admin/orders', label: 'Orders', icon: ListOrdered, admin: true },
-    { href: '/admin', label: 'Admin Panel', admin: true },
+    ...(myOrdersLink ? [myOrdersLink] : []),
   ];
 
   return (
@@ -48,7 +49,7 @@ export function Header() {
              <Button key={link.href} variant={pathname === link.href ? "secondary" : "ghost"} asChild>
                 <Link href={link.href}>
                   {link.icon && <link.icon className="h-4 w-4" />}
-                  <span className={link.icon ? "hidden md:inline" : ""}>{link.label}</span>
+                  <span className={link.icon ? "hidden md:inline ml-2" : ""}>{link.label}</span>
                 </Link>
              </Button>
            ))}
