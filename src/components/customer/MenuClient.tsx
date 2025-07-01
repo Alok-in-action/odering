@@ -22,9 +22,8 @@ import {
   Sprout, 
   Wheat, 
   RectangleHorizontal, 
-  Bowl, 
   Pizza, 
-  Burger 
+  ChefHat
 } from 'lucide-react';
 
 interface MenuClientProps {
@@ -51,13 +50,13 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   'tava-roti': CookingPot,
   'south-indian-fancy-dosa': RectangleHorizontal,
   'kuch-ke-kuch-saath': Soup,
-  'basmati-ka-swad-rice': Bowl,
+  'basmati-ka-swad-rice': ChefHat,
   'mozzarella-pizza': Pizza,
   'toast-sandwich': Sandwich,
   'pav-bhaji': Soup,
   'pizza': Pizza,
   'grill-sandwich': Sandwich,
-  'burger': Burger,
+  'burger': Sandwich,
   'sip-in-soda': CupSoda,
   'paper-dosa': RectangleHorizontal,
   'uttapam': Circle,
