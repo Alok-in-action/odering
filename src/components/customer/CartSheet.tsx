@@ -15,7 +15,7 @@ interface CartSheetProps {
 }
 
 export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, cartTotal, tableNumber, setTableNumber } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, clearCart, cartTotal, tableNumber } = useCart();
   const { toast } = useToast();
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
@@ -39,7 +39,7 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
         description: (
           <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4 text-white">
             <p className="text-sm">Table: {result.order.tableNumber}</p>
-            <p className="text-sm">Total: ₹{result.order.total.toFixed(2)}</p>
+            <p className="text-sm">₹{result.order.total.toFixed(2)}</p>
             <p className="text-sm">Order ID: {result.order.id}</p>
           </div>
         )
@@ -101,9 +101,6 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
                 <div className="space-y-2">
                     <div className="flex justify-between items-center rounded-md border p-3">
                         <span className="text-sm">Table Number: <span className="font-semibold">{tableNumber}</span></span>
-                        <Button variant="link" className="p-0 h-auto" onClick={() => { onOpenChange(false); setTableNumber(null); }}>
-                            Change
-                        </Button>
                     </div>
                     <Button 
                       className="w-full"
