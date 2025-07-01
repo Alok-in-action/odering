@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
@@ -59,8 +59,11 @@ export function MenuClient({ categories, menuItems }: MenuClientProps) {
   const { addToCart } = useCart();
   const [selectedCategory, setSelectedCategory] = useState(categories[0]?.id || '');
   const [searchQuery, setSearchQuery] = useState('');
+  const isClickScrolling = useRef(false);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleSelectCategory = (categoryId: string) => {
+    isClickScrolling.current = true;
     setSelectedCategory(categoryId);
     const element = document.getElementById(categoryId);
     if (element) {
@@ -68,6 +71,14 @@ export function MenuClient({ categories, menuItems }: MenuClientProps) {
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
+
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current);
+    }
+
+    scrollTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 1000); // Allow time for smooth scroll to finish
   };
 
   const filteredItems = useMemo(() =>
@@ -75,6 +86,45 @@ export function MenuClient({ categories, menuItems }: MenuClientProps) {
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase())
     ), [menuItems, searchQuery]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isClickScrolling.current) return;
+        
+        const intersectingEntries = entries.filter(e => e.isIntersecting);
+        if (intersectingEntries.length > 0) {
+            // Get the topmost intersecting entry
+            const topEntry = intersectingEntries.reduce((prev, current) => {
+                return (prev.boundingClientRect.top < current.boundingClientRect.top) ? prev : current;
+            });
+             setSelectedCategory(topEntry.target.id);
+        }
+      },
+      {
+        rootMargin: "-120px 0px -65% 0px", // Top offset for sticky header, bottom offset to define trigger area
+        threshold: 0,
+      }
+    );
+
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach((section) => {
+        if (section) observer.observe(section);
+    });
+
+    return () => {
+      sections.forEach((section) => {
+        if (section) observer.unobserve(section);
+      });
+    };
+  }, [filteredItems]); // Re-run if search query changes the visible items
+
+  useEffect(() => {
+    const selectedButton = document.querySelector(`[data-category-id="${selectedCategory}"]`);
+    if (selectedButton) {
+      selectedButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [selectedCategory]);
 
   return (
     <main className="container mx-auto px-4 py-6 sm:py-8">
@@ -102,6 +152,7 @@ export function MenuClient({ categories, menuItems }: MenuClientProps) {
               return (
                 <Button
                   key={cat.id}
+                  data-category-id={cat.id}
                   variant={isSelected ? "default" : "outline"}
                   className={`flex h-auto flex-col items-start gap-2 p-3 text-left shadow-sm transition-all ${isSelected ? 'border-primary' : 'bg-card'}`}
                   onClick={() => handleSelectCategory(cat.id)}
