@@ -6,24 +6,20 @@ import { Button } from "@/components/ui/button";
 import type { Order } from "@/lib/types";
 import { format } from 'date-fns';
 import { CheckCircle2, Circle } from "lucide-react";
-import { updateOrderStatus } from '@/lib/data';
 import { useToast } from "@/hooks/use-toast";
-import { revalidatePath } from "next/cache";
-import { useRouter } from "next/navigation";
+import { updateOrderStatusAction } from '../actions';
 
-
-async function handleUpdateStatus(id: string, status: 'pending' | 'completed') {
-    await updateOrderStatus(id, status);
-}
 
 export function OrderList({ orders }: { orders: Order[] }) {
     const { toast } = useToast();
-    const router = useRouter();
 
     const handleStatusChange = async (id: string, status: 'completed' | 'pending') => {
-        await handleUpdateStatus(id, status);
-        toast({ title: "Status Updated", description: `Order ${id} marked as ${status}.`});
-        router.refresh();
+        const result = await updateOrderStatusAction(id, status);
+        if (result.success) {
+            toast({ title: "Status Updated", description: `Order ${id} marked as ${status}.`});
+        } else {
+            toast({ variant: 'destructive', title: "Error", description: result.message});
+        }
     };
 
   return (
@@ -53,13 +49,13 @@ export function OrderList({ orders }: { orders: Order[] }) {
                         {order.items.map(item => (
                             <li key={item.id} className="flex justify-between text-sm">
                                 <span>{item.quantity} x {item.name}</span>
-                                <span>${(item.quantity * item.price).toFixed(2)}</span>
+                                <span>Rs. {(item.quantity * item.price).toFixed(2)}</span>
                             </li>
                         ))}
                         </ul>
                         <div className="border-t mt-2 pt-2 flex justify-between font-bold">
                             <span>Total</span>
-                            <span>${order.total.toFixed(2)}</span>
+                            <span>Rs. {order.total.toFixed(2)}</span>
                         </div>
                     </CardContent>
                     <CardFooter>

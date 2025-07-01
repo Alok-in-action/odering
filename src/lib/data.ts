@@ -381,7 +381,7 @@ let menuItems: MenuItem[] = [
   { id: '291', name: 'Mix Uttapam', description: 'मिक्स उत्तपम', price: 160.00, categoryId: 'uttapam' },
   
   // Monto Special Thali
-  { id: '292', name: 'Monto Special Thali (₹201/-)', description: 'मोन्टो स्पेशल थाली (₹२०१/-). In Fixed Quantity: Roasted Papad, Salad, Paneer Sabji, Vegetable Dal Tadka, Rice, 4 Chapati, Sweet: Rasgulla (1 piece).', price: 201.00, categoryId: 'monto-special-thali' },
+  { id: '292', name: 'Monto Special Thali (Rs.201/-)', description: 'मोन्टो स्पेशल थाली (Rs.२०१/-). In Fixed Quantity: Roasted Papad, Salad, Paneer Sabji, Vegetable Dal Tadka, Rice, 4 Chapati, Sweet: Rasgulla (1 piece).', price: 201.00, categoryId: 'monto-special-thali' },
 ];
 
 let orders: Order[] = [];

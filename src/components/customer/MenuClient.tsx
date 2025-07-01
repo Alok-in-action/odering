@@ -100,7 +100,7 @@ export function MenuClient({ categories, menuItems }: MenuClientProps) {
                       <CardDescription>{item.description}</CardDescription>
                     </CardContent>
                     <CardFooter className="flex justify-between items-center p-4 pt-0">
-                      <p className="text-lg font-semibold text-primary">${item.price.toFixed(2)}</p>
+                      <p className="text-lg font-semibold text-primary">Rs. {item.price.toFixed(2)}</p>
                       <Button onClick={() => addToCart(item)}>
                         <PlusCircle className="mr-2 h-4 w-4" /> Add to Cart
                       </Button>
