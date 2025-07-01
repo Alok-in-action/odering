@@ -9,25 +9,25 @@ let categories: Category[] = [
 
 let menuItems: MenuItem[] = [
   // Appetizers
-  { id: '1', name: 'Bruschetta', description: 'Grilled bread with tomatoes, garlic, and basil.', price: 8.50, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'appetizers', "data-ai-hint": "bruschetta bread" },
-  { id: '2', name: 'Stuffed Mushrooms', description: 'Mushroom caps filled with herbs and breadcrumbs.', price: 9.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'appetizers', "data-ai-hint": "stuffed mushrooms" },
-  { id: '3', name: 'Garlic Knots', description: 'Freshly baked knots with garlic butter.', price: 6.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'appetizers', "data-ai-hint": "garlic knots" },
+  { id: '1', name: 'Bruschetta', description: 'Grilled bread with tomatoes, garlic, and basil.', price: 8.50, categoryId: 'appetizers' },
+  { id: '2', name: 'Stuffed Mushrooms', description: 'Mushroom caps filled with herbs and breadcrumbs.', price: 9.00, categoryId: 'appetizers' },
+  { id: '3', name: 'Garlic Knots', description: 'Freshly baked knots with garlic butter.', price: 6.00, categoryId: 'appetizers' },
   
   // Main Courses
-  { id: '4', name: 'Margherita Pizza', description: 'Classic pizza with tomato, mozzarella, and basil.', price: 14.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'main-courses', "data-ai-hint": "margherita pizza" },
-  { id: '5', name: 'Spaghetti Carbonara', description: 'Pasta with pancetta, egg, and parmesan cheese.', price: 16.50, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'main-courses', "data-ai-hint": "spaghetti carbonara" },
-  { id: '6', name: 'Chicken Parmesan', description: 'Breaded chicken with marinara and mozzarella.', price: 18.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'main-courses', "data-ai-hint": "chicken parmesan" },
-  { id: '7', name: 'Grilled Salmon', description: 'Served with roasted vegetables and lemon dill sauce.', price: 22.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'main-courses', "data-ai-hint": "grilled salmon" },
+  { id: '4', name: 'Margherita Pizza', description: 'Classic pizza with tomato, mozzarella, and basil.', price: 14.00, categoryId: 'main-courses' },
+  { id: '5', name: 'Spaghetti Carbonara', description: 'Pasta with pancetta, egg, and parmesan cheese.', price: 16.50, categoryId: 'main-courses' },
+  { id: '6', name: 'Chicken Parmesan', description: 'Breaded chicken with marinara and mozzarella.', price: 18.00, categoryId: 'main-courses' },
+  { id: '7', name: 'Grilled Salmon', description: 'Served with roasted vegetables and lemon dill sauce.', price: 22.00, categoryId: 'main-courses' },
 
   // Desserts
-  { id: '8', name: 'Tiramisu', description: 'Coffee-flavored Italian dessert.', price: 7.50, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'desserts', "data-ai-hint": "tiramisu slice" },
-  { id: '9', name: 'Cheesecake', description: 'Creamy cheesecake with a graham cracker crust.', price: 7.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'desserts', "data-ai-hint": "cheesecake slice" },
-  { id: '10', name: 'Chocolate Lava Cake', description: 'Warm chocolate cake with a molten center.', price: 8.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'desserts', "data-ai-hint": "lava cake" },
+  { id: '8', name: 'Tiramisu', description: 'Coffee-flavored Italian dessert.', price: 7.50, categoryId: 'desserts' },
+  { id: '9', name: 'Cheesecake', description: 'Creamy cheesecake with a graham cracker crust.', price: 7.00, categoryId: 'desserts' },
+  { id: '10', name: 'Chocolate Lava Cake', description: 'Warm chocolate cake with a molten center.', price: 8.00, categoryId: 'desserts' },
 
   // Drinks
-  { id: '11', name: 'Iced Tea', description: 'Freshly brewed and chilled.', price: 3.00, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'drinks', "data-ai-hint": "iced tea" },
-  { id: '12', name: 'Lemonade', description: 'Homemade with fresh lemons.', price: 3.50, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'drinks', "data-ai-hint": "lemonade glass" },
-  { id: '13', name: 'Espresso', description: 'Strong black coffee.', price: 2.50, imageUrl: 'https://placehold.co/600x400.png', categoryId: 'drinks', "data-ai-hint": "espresso cup" },
+  { id: '11', name: 'Iced Tea', description: 'Freshly brewed and chilled.', price: 3.00, categoryId: 'drinks' },
+  { id: '12', name: 'Lemonade', description: 'Homemade with fresh lemons.', price: 3.50, categoryId: 'drinks' },
+  { id: '13', name: 'Espresso', description: 'Strong black coffee.', price: 2.50, categoryId: 'drinks' },
 ];
 
 let orders: Order[] = [

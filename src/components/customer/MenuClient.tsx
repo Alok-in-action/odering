@@ -2,10 +2,9 @@
 
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
 import type { Category, MenuItem } from '@/lib/types';
 import { PlusCircle, UtensilsCrossed, Salad, CakeSlice, CupSoda } from 'lucide-react';
-import Image from 'next/image';
 
 interface MenuClientProps {
   categories: Category[];
@@ -51,16 +50,6 @@ export function MenuClient({ categories, menuItems }: MenuClientProps) {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {menuItems.filter(item => item.categoryId === category.id).map(item => (
                   <Card key={item.id} className="flex flex-col overflow-hidden">
-                    <CardHeader className="p-0">
-                       <Image
-                          src={item.imageUrl}
-                          alt={item.name}
-                          width={600}
-                          height={400}
-                          className="w-full h-48 object-cover"
-                          data-ai-hint={item['data-ai-hint']}
-                        />
-                    </CardHeader>
                     <CardContent className="p-4 flex-grow">
                       <CardTitle className="text-xl mb-1">{item.name}</CardTitle>
                       <CardDescription>{item.description}</CardDescription>

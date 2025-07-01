@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetDescription } from '@/components/ui/sheet';
-import Image from 'next/image';
 import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { placeOrderAction } from '@/app/actions';
@@ -73,7 +72,6 @@ export function CartSheet({ isOpen, onOpenChange }: CartSheetProps) {
               <div className="flex flex-col gap-4 py-4">
                 {cartItems.map(item => (
                   <div key={item.id} className="flex items-center gap-4">
-                    <Image src={item.imageUrl} alt={item.name} width={64} height={64} className="rounded-md" />
                     <div className="flex-grow">
                       <p className="font-medium">{item.name}</p>
                       <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>

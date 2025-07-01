@@ -11,16 +11,10 @@ const menuItemSchema = z.object({
   description: z.string().min(1, "Description is required"),
   price: z.coerce.number().min(0.01, "Price must be positive"),
   categoryId: z.string().min(1, "Category is required"),
-  imageUrl: z.string().url("Must be a valid URL").optional().or(z.literal('')),
 });
 
 export async function saveMenuItemAction(formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());
-  
-  // Use a placeholder if imageUrl is empty
-  if (!rawData.imageUrl) {
-      rawData.imageUrl = 'https://placehold.co/600x400.png';
-  }
   
   const validation = menuItemSchema.safeParse(rawData);
 

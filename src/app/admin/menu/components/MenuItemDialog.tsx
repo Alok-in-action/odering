@@ -19,7 +19,6 @@ const menuItemSchema = z.object({
   description: z.string().min(1, "Description is required"),
   price: z.coerce.number().min(0.01, "Price must be positive"),
   categoryId: z.string().min(1, "Category is required"),
-  imageUrl: z.string().url("Must be a valid URL").optional().or(z.literal('')),
 });
 
 type MenuItemFormValues = z.infer<typeof menuItemSchema>;
@@ -41,7 +40,6 @@ export function MenuItemDialog({ isOpen, onOpenChange, menuItem, categories }: M
       description: '',
       price: 0,
       categoryId: '',
-      imageUrl: '',
     },
   });
 
@@ -124,17 +122,6 @@ export function MenuItemDialog({ isOpen, onOpenChange, menuItem, categories }: M
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image URL (optional)</FormLabel>
-                  <FormControl><Input {...field} placeholder="https://placehold.co/600x400.png" /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}

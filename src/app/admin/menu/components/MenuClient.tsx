@@ -9,7 +9,6 @@ import { MenuItemDialog } from './MenuItemDialog';
 import type { MenuItem, Category } from '@/lib/types';
 import { deleteMenuItemAction } from '../actions';
 import { useToast } from '@/hooks/use-toast';
-import Image from 'next/image';
 
 interface MenuClientProps {
   menuItems: MenuItem[];
@@ -53,7 +52,6 @@ export function MenuClient({ menuItems, categories }: MenuClientProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
@@ -63,9 +61,6 @@ export function MenuClient({ menuItems, categories }: MenuClientProps) {
             <TableBody>
               {menuItems.map(item => (
                 <TableRow key={item.id}>
-                  <TableCell>
-                    <Image src={item.imageUrl} alt={item.name} width={40} height={40} className="rounded-sm" />
-                  </TableCell>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>{categories.find(c => c.id === item.categoryId)?.name}</TableCell>
                   <TableCell>${item.price.toFixed(2)}</TableCell>
