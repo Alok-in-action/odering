@@ -1,16 +1,18 @@
 
 import type { MenuItem, Category, Order, CartItem } from './types';
+import fs from 'fs/promises';
+import path from 'path';
 
-// In-memory "database"
-declare global {
-  // allow global `var` declarations
-  // eslint-disable-next-line no-var
-  var db: {
-    categories: Category[];
-    menuItems: MenuItem[];
-    orders: Order[];
-  } | undefined
-}
+const DB_PATH = path.join(process.cwd(), 'db.json');
+
+// In-memory cache to avoid reading the file on every request.
+let dbCache: {
+  categories: Category[];
+  menuItems: MenuItem[];
+  orders: Order[];
+  lastReset: string; // ISO string
+} | null = null;
+
 
 const initialCategories: Category[] = [
   { id: 'khane-se-pahele-time-pass', name: 'Khane Se Pahele Time Pass' },
@@ -396,58 +398,138 @@ const initialMenuItems: MenuItem[] = [
   { id: '292', name: 'Monto Special Thali (₹201/-)', description: 'मोन्टो स्पेशल थाली (₹२०१/-). In Fixed Quantity: Roasted Papad, Salad, Paneer Sabji, Vegetable Dal Tadka, Rice, 4 Chapati, Sweet: Rasgulla (1 piece).', price: 201.00, categoryId: 'monto-special-thali' },
 ];
 
-const db = global.db || {
-  categories: initialCategories,
-  menuItems: initialMenuItems,
-  orders: []
+async function readDb() {
+  if (dbCache) {
+    await checkAndResetData();
+    return dbCache;
+  }
+
+  try {
+    const fileContent = await fs.readFile(DB_PATH, 'utf-8');
+    const data = JSON.parse(fileContent);
+    // Dates are stored as strings in JSON, so we need to parse them back
+    dbCache = {
+        ...data,
+        orders: data.orders.map((o: Order) => ({...o, createdAt: new Date(o.createdAt)}))
+    };
+
+  } catch (error: any) {
+    // If the file doesn't exist or is invalid, create a new one with initial data
+    if (error.code === 'ENOENT') {
+      console.log('No db.json found, creating a new one.');
+      dbCache = {
+        categories: initialCategories,
+        menuItems: initialMenuItems,
+        orders: [],
+        lastReset: new Date().toISOString(),
+      };
+      await writeDb(dbCache);
+    } else {
+      console.error("Failed to read or parse db.json:", error);
+      // Fallback to initial data if read fails for other reasons
+       dbCache = {
+        categories: initialCategories,
+        menuItems: initialMenuItems,
+        orders: [],
+        lastReset: new Date().toISOString(),
+      };
+    }
+  }
+  
+  await checkAndResetData();
+  return dbCache!;
 }
 
-// This needs to be outside the NODE_ENV check to work in production
-global.db = db;
+async function writeDb(data: typeof dbCache) {
+  if (!data) return;
+  // Make a deep copy to avoid modifying the cache directly before writing
+  const dataToWrite = JSON.parse(JSON.stringify(data));
+  await fs.writeFile(DB_PATH, JSON.stringify(dataToWrite, null, 2), 'utf-8');
+  // Update cache after successful write, ensuring dates are Date objects
+   if (data) {
+     data.orders = data.orders.map(o => ({...o, createdAt: new Date(o.createdAt)}));
+     dbCache = data;
+   }
+}
+
+async function checkAndResetData() {
+    if (!dbCache) {
+        // This can happen on the very first run.
+        // The readDb function will call this again after loading the cache.
+        return;
+    }
+
+    const now = new Date();
+    const lastResetDate = new Date(dbCache.lastReset);
+
+    // Set reset time to 3 AM today
+    const resetTimeToday = new Date(now);
+    resetTimeToday.setHours(3, 0, 0, 0);
+
+    // If it's already past 3 AM today AND the last reset was before 3 AM today, we need to reset.
+    if (now >= resetTimeToday && lastResetDate < resetTimeToday) {
+        console.log("Daily reset: Clearing orders...");
+        dbCache.orders = [];
+        dbCache.lastReset = now.toISOString();
+        await writeDb(dbCache);
+    }
+}
 
 
 // Menu Data Functions
 export const getMenuData = async () => {
+  const db = await readDb();
   return { categories: db.categories, menuItems: db.menuItems };
 };
 
 export const getMenuItems = async () => {
+  const db = await readDb();
   return db.menuItems;
 }
 
 export const getCategories = async () => {
+  const db = await readDb();
   return db.categories;
 }
 
 export const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
+  const db = await readDb();
   const newItem = { ...item, id: Date.now().toString() };
   db.menuItems.push(newItem);
+  await writeDb(db);
   return newItem;
 };
 
 export const updateMenuItem = async (updatedItem: MenuItem) => {
+  const db = await readDb();
   db.menuItems = db.menuItems.map(item => item.id === updatedItem.id ? updatedItem : item);
+  await writeDb(db);
   return updatedItem;
 };
 
 export const deleteMenuItem = async (id: string) => {
+  const db = await readDb();
   db.menuItems = db.menuItems.filter(item => item.id !== id);
+  await writeDb(db);
   return { success: true };
 };
 
 
 // Order Data Functions
 export const getOrders = async () => {
+  const db = await readDb();
   return db.orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 };
 
 export const getOrdersByTable = async (tableNumber: number) => {
+  const db = await readDb();
   return db.orders
     .filter(o => o.tableNumber === tableNumber)
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 };
 
 export const addOrder = async (tableNumber: number, items: CartItem[], total: number) => {
+  const db = await readDb();
   const newOrder: Order = {
     id: `ord-${Date.now()}`,
     tableNumber,
@@ -457,13 +539,16 @@ export const addOrder = async (tableNumber: number, items: CartItem[], total: nu
     createdAt: new Date(),
   };
   db.orders.push(newOrder);
+  await writeDb(db);
   return newOrder;
 };
 
 export const updateOrderStatus = async (id: string, status: 'pending' | 'completed') => {
+  const db = await readDb();
   const order = db.orders.find(o => o.id === id);
   if (order) {
     order.status = status;
+    await writeDb(db);
     return order;
   }
   return null;
