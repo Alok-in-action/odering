@@ -402,9 +402,8 @@ const db = global.db || {
   orders: []
 }
 
-if (process.env.NODE_ENV !== 'production') {
-  global.db = db
-}
+// This needs to be outside the NODE_ENV check to work in production
+global.db = db;
 
 
 // Menu Data Functions
