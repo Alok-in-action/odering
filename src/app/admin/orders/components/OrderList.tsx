@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,15 @@ import { updateOrderStatusAction } from '../actions';
 
 export function OrderList({ orders }: { orders: Order[] }) {
     const { toast } = useToast();
+    const router = useRouter();
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.refresh();
+        }, 10000); // Refresh every 10 seconds
+
+        return () => clearInterval(interval); // Cleanup on component unmount
+    }, [router]);
 
     const handleStatusChange = async (id: string, status: 'completed' | 'pending') => {
         const result = await updateOrderStatusAction(id, status);
@@ -27,7 +38,7 @@ export function OrderList({ orders }: { orders: Order[] }) {
         <Card>
             <CardHeader>
                 <CardTitle>Current Orders</CardTitle>
-                <CardDescription>View and manage incoming customer orders.</CardDescription>
+                <CardDescription>View and manage incoming customer orders. Refreshes automatically.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {orders.length === 0 && <p className="text-muted-foreground col-span-full text-center py-10">No orders yet.</p>}
